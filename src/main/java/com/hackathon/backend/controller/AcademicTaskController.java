@@ -2,7 +2,9 @@ package com.hackathon.backend.controller;
 
 import com.hackathon.backend.dto.AcademicTaskRequest;
 import com.hackathon.backend.dto.AcademicTaskResponse;
+import com.hackathon.backend.dto.NotificationResponse;
 import com.hackathon.backend.enums.TaskType;
+import com.hackathon.backend.service.AcademicTaskNotificationService;
 import com.hackathon.backend.service.AcademicTaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 public class AcademicTaskController {
 
     private final AcademicTaskService academicTaskService;
+    private final AcademicTaskNotificationService academicTaskNotificationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -56,5 +59,20 @@ public class AcademicTaskController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         academicTaskService.delete(id);
+    }
+
+    @PostMapping("/{id}/generate-notifications")
+    public List<NotificationResponse> generateNotifications(@PathVariable Long id) {
+        return academicTaskNotificationService.generateNotifications(id);
+    }
+
+    @PostMapping("/{id}/send-notifications")
+    public List<NotificationResponse> sendNotifications(@PathVariable Long id) {
+        return academicTaskNotificationService.sendNotifications(id);
+    }
+
+    @PostMapping("/{id}/generate-and-send-notifications")
+    public List<NotificationResponse> generateAndSendNotifications(@PathVariable Long id) {
+        return academicTaskNotificationService.generateAndSendNotifications(id);
     }
 }
