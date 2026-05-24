@@ -1,7 +1,6 @@
 package com.hackathon.backend.controller;
 
-import com.hackathon.backend.exception.StudentNotFoundException;
-import com.hackathon.backend.exception.StudentRegistrationAlreadyExistsException;
+import com.hackathon.backend.exception.*;
 import com.twilio.exception.ApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +24,7 @@ public class ControllerExceptionHandler {
             StudentRegistrationAlreadyExistsException ex
     ) {
         return buildError(HttpStatus.CONFLICT, "Registration number already exists", ex.getMessage());
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
@@ -58,5 +58,24 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity.status(status).body(body);
     }
-    
+
+    @ExceptionHandler(GroupNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleGroupNotFound(GroupNotFoundException ex) {
+        return buildError(HttpStatus.NOT_FOUND, "Group not found", ex.getMessage());
+    }
+
+    @ExceptionHandler(GroupNameAlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>> handleGroupNameAlreadyExists(GroupNameAlreadyExistsException ex) {
+        return buildError(HttpStatus.CONFLICT, "Group name already exists", ex.getMessage());
+    }
+
+    @ExceptionHandler(StudentGroupNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleStudentGroupNotFound(StudentGroupNotFoundException ex) {
+        return buildError(HttpStatus.NOT_FOUND, "Student group not found", ex.getMessage());
+    }
+
+    @ExceptionHandler(StudentAlreadyInGroupException.class)
+    public ResponseEntity<Map<String, Object>> handleStudentAlreadyInGroup(StudentAlreadyInGroupException ex) {
+        return buildError(HttpStatus.CONFLICT, "Student already in group", ex.getMessage());
+    }
 }
