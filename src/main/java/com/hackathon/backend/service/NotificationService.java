@@ -2,10 +2,13 @@ package com.hackathon.backend.service;
 
 import com.hackathon.backend.dto.NotificationRequest;
 import com.hackathon.backend.dto.NotificationResponse;
+import com.hackathon.backend.entity.AcademicTask;
 import com.hackathon.backend.entity.Notification;
 import com.hackathon.backend.entity.Student;
 import com.hackathon.backend.enums.NotificationStatus;
+import com.hackathon.backend.exception.AcademicTaskNotFoundException;
 import com.hackathon.backend.exception.NotificationNotFoundException;
+import com.hackathon.backend.repository.AcademicTaskRepository;
 import com.hackathon.backend.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

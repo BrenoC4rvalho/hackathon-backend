@@ -78,4 +78,9 @@ public class ControllerExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleStudentAlreadyInGroup(StudentAlreadyInGroupException ex) {
         return buildError(HttpStatus.CONFLICT, "Student already in group", ex.getMessage());
     }
+
+    @ExceptionHandler(AcademicTaskNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleAcademicTaskNotFound(AcademicTaskNotFoundException ex) {
+        return buildError(HttpStatus.NOT_FOUND, "Academic task not found", ex.getMessage());
+    }
 }
