@@ -1,5 +1,7 @@
 package com.hackathon.backend.controller;
 
+import com.hackathon.backend.exception.StudentNotFoundException;
+import com.hackathon.backend.exception.StudentRegistrationAlreadyExistsException;
 import com.twilio.exception.ApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,16 @@ import java.util.Map;
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
+    @ExceptionHandler(StudentNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleStudentNotFound(StudentNotFoundException ex) {
+        return buildError(HttpStatus.NOT_FOUND, "Student not found", ex.getMessage());
+    }
+
+    @ExceptionHandler(StudentRegistrationAlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>> handleStudentRegistrationAlreadyExists(
+            StudentRegistrationAlreadyExistsException ex
+    ) {
+        return buildError(HttpStatus.CONFLICT, "Registration number already exists", ex.getMessage());
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
