@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/register",
                                 "/api/auth/login",
+                                "/api/whatsapp/webhook",
                                 "/h2-console/**"
                         ).permitAll()
                         .anyRequest().authenticated()
