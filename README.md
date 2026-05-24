@@ -5,7 +5,121 @@ API backend para gestão de alunos, grupos, tarefas acadêmicas e notificações
 ```http
 http://localhost:8080
 ````
+# Configuração da aplicação
 
+## application.yml
+
+```yaml
+server:
+  port: 8080
+
+spring:
+  application:
+    name: backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hackathon
+    username: myuser
+    password: secret
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+jwt:
+  secret: 1234567891234567891234567891234567891234567891234567891234567891234
+  expiration: 86400000
+
+twilio:
+  account-sid: SEU_ACCOUNT_SID
+  auth-token: SEU_AUTH_TOKEN
+  whatsapp-from: whatsapp:+14155238886
+```
+
+---
+
+# Banco de dados
+
+## Docker Compose
+
+```yaml
+services:
+  postgres:
+    image: 'postgres:latest'
+
+    environment:
+      - 'POSTGRES_DB=hackathon'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=myuser'
+
+    ports:
+      - '5432:5432'
+```
+
+## Subir banco
+
+```bash
+docker compose up -d
+```
+
+---
+
+# Rodar aplicação
+
+```bash
+./mvnw spring-boot:run
+```
+
+ou
+
+```bash
+mvn spring-boot:run
+```
+
+---
+
+# Configuração Twilio WhatsApp Sandbox
+
+1. Criar conta na Twilio;
+2. Entrar em:
+    - Messaging
+    - Try it out
+    - Send a WhatsApp message
+3. Entrar no Sandbox do WhatsApp;
+4. Enviar a mensagem fornecida pela Twilio para:
+
+```text
++1 415 523 8886
+```
+
+Exemplo:
+
+```text
+join sandbox-name
+```
+
+---
+
+# Importante
+
+Os números enviados pela API precisam estar no formato:
+
+```text
++5534999999999
+```
+
+O backend automaticamente adiciona:
+
+```text
+whatsapp:
+```
+
+antes do número para integração com a Twilio.
 
 ## Autenticação
 
