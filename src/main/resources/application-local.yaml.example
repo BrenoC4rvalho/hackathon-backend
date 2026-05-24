@@ -1,0 +1,5 @@
+# Copie para application-local.yaml (não vai para o Git)
+twilio:
+  account-sid: ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  auth-token: seu_auth_token_aqui
+  whatsapp-from: whatsapp:+5524998850394

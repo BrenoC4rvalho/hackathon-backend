@@ -5,14 +5,22 @@ spring:
   application:
     name: backend
 
+  config:
+    import: optional:classpath:application-local.yaml
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/hackathon
+    url: jdbc:postgresql://localhost:5432/hackathon?tcpKeepAlive=true
     username: myuser
     password: secret
+    hikari:
+      max-lifetime: 600000
+      keepalive-time: 120000
+      connection-timeout: 30000
+      validation-timeout: 5000
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
 
   flyway:
     enabled: true
@@ -24,6 +32,6 @@ jwt:
   expiration: 86400000
 
 twilio:
-  account-sid: 
-  auth-token:
-  whatsapp-from:
+  account-sid: ${TWILIO_ACCOUNT_SID:}
+  auth-token: ${TWILIO_AUTH_TOKEN:}
+  whatsapp-from: ${TWILIO_WHATSAPP_FROM:}
