@@ -1,8 +1,11 @@
 package com.hackathon.backend;
 
+import com.hackathon.backend.config.TwilioProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+@EnableConfigurationProperties(TwilioProperties.class)
 @SpringBootApplication
 public class BackendApplication {
 
