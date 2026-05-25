@@ -31,7 +31,6 @@ public class ControllerExceptionHandler {
         String message = ex.getBindingResult().getFieldErrors().isEmpty()
                 ? "Invalid request"
                 : ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-
         return buildError(HttpStatus.BAD_REQUEST, "Validation error", message);
     }
 
@@ -40,23 +39,19 @@ public class ControllerExceptionHandler {
         return buildError(HttpStatus.BAD_GATEWAY, "Twilio error", ex.getMessage());
     }
 
+    // Erros de autenticação retornam 401
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, Object>> handleRuntime(RuntimeException ex) {
+        String msg = ex.getMessage() != null ? ex.getMessage() : "Erro de autenticação";
+        if (msg.contains("não encontrado") || msg.contains("inválida") || msg.contains("já cadastrado")) {
+            return buildError(HttpStatus.UNAUTHORIZED, "Authentication error", msg);
+        }
+        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", msg);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
         return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", ex.getMessage());
-    }
-
-    private ResponseEntity<Map<String, Object>> buildError(
-            HttpStatus status,
-            String error,
-            String message
-    ) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", Instant.now());
-        body.put("status", status.value());
-        body.put("error", error);
-        body.put("message", message);
-
-        return ResponseEntity.status(status).body(body);
     }
 
     @ExceptionHandler(GroupNotFoundException.class)
@@ -92,5 +87,14 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(NoStudentsInGroupException.class)
     public ResponseEntity<Map<String, Object>> handleNoStudentsInGroup(NoStudentsInGroupException ex) {
         return buildError(HttpStatus.BAD_REQUEST, "No students in group", ex.getMessage());
+    }
+
+    private ResponseEntity<Map<String, Object>> buildError(HttpStatus status, String error, String message) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", status.value());
+        body.put("error", error);
+        body.put("message", message);
+        return ResponseEntity.status(status).body(body);
     }
 }

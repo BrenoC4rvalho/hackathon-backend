@@ -34,13 +34,15 @@ public class AuthController {
     ) {
         String token = userService.login(request);
 
-        Cookie cookie = new Cookie("access_token", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false); // true em produção com HTTPS
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60);
-
-        response.addCookie(cookie);
+        // SameSite=None necessário para cross-site (Vercel + Render)
+        response.setHeader("Set-Cookie",
+                "access_token=" + token
+                + "; Path=/"
+                + "; HttpOnly"
+                + "; Secure"
+                + "; SameSite=None"
+                + "; Max-Age=" + (24 * 60 * 60)
+        );
 
         return new AuthResponse("Login realizado com sucesso");
     }
@@ -58,13 +60,14 @@ public class AuthController {
 
     @PostMapping("/logout")
     public AuthResponse logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("access_token", null);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-
-        response.addCookie(cookie);
+        response.setHeader("Set-Cookie",
+                "access_token="
+                + "; Path=/"
+                + "; HttpOnly"
+                + "; Secure"
+                + "; SameSite=None"
+                + "; Max-Age=0"
+        );
 
         return new AuthResponse("Logout realizado com sucesso");
     }
