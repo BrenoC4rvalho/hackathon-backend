@@ -1,11 +1,18 @@
 package com.hackathon.backend.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class AuthResponse {
-
     private String message;
+    private String token;
+
+    public AuthResponse(String message) {
+        this.message = message;
+    }
+
+    public AuthResponse(String message, String token) {
+        this.message = message;
+        this.token = token;
+    }
 }

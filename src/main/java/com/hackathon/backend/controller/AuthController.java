@@ -5,7 +5,6 @@ import com.hackathon.backend.dto.AuthResponse;
 import com.hackathon.backend.dto.RegisterRequest;
 import com.hackathon.backend.entity.User;
 import com.hackathon.backend.service.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,29 +27,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthResponse login(
-            @RequestBody @Valid AuthRequest request,
-            HttpServletResponse response
-    ) {
+    public AuthResponse login(@RequestBody @Valid AuthRequest request) {
         String token = userService.login(request);
-
-        // SameSite=None necessário para cross-site (Vercel + Render)
-        response.setHeader("Set-Cookie",
-                "access_token=" + token
-                + "; Path=/"
-                + "; HttpOnly"
-                + "; Secure"
-                + "; SameSite=None"
-                + "; Max-Age=" + (24 * 60 * 60)
-        );
-
-        return new AuthResponse("Login realizado com sucesso");
+        return new AuthResponse("Login realizado com sucesso", token);
     }
 
     @GetMapping("/me")
     public Map<String, Object> me(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-
         return Map.of(
                 "id", user.getId(),
                 "name", user.getName(),
@@ -59,16 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public AuthResponse logout(HttpServletResponse response) {
-        response.setHeader("Set-Cookie",
-                "access_token="
-                + "; Path=/"
-                + "; HttpOnly"
-                + "; Secure"
-                + "; SameSite=None"
-                + "; Max-Age=0"
-        );
-
+    public AuthResponse logout() {
         return new AuthResponse("Logout realizado com sucesso");
     }
 }
