@@ -27,6 +27,9 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,https://campus-notify.vercel.app}
+
 jwt:
   secret: ${JWT_SECRET:1234567891234567891234567891234567891234567891234567891234567891234}
   expiration: 86400000
