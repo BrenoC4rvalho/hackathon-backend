@@ -15,6 +15,10 @@ public class TwilioConfig {
 
     @PostConstruct
     public void init() {
-        Twilio.init(properties.accountSid(), properties.authToken());
+        String sid = properties.accountSid();
+        String token = properties.authToken();
+        if (sid != null && !sid.isBlank() && token != null && !token.isBlank()) {
+            Twilio.init(sid, token);
+        }
     }
 }
